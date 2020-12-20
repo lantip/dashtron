@@ -1,0 +1,80 @@
+{% extends "layout.jinja2" %}
+
+{% block pagestyles %}
+  <link href="{{ url_for('static', filename='dist/css/dashboard.css') }}" rel="stylesheet" type="text/css">
+  <link href="{{ url_for('static', filename='dist/css/settings.css') }}" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="https://use.typekit.net/sus7rlu.css">
+{% endblock %}
+
+{% block content %}
+  {% if current_user.is_authenticated %}
+      <div class="form-wrapper">
+
+        <div class="logo">
+          <img src="{{ url_for('static', filename='dist/img/logo.png') }}" alt="logo" width="80" />
+        </div>
+
+        {% for message in get_flashed_messages() %}
+          <div class="alert alert-warning">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{ message }}
+          </div>
+        {% endfor %}
+
+        <h1>Settings</h1>
+
+        <form method="POST" action="/">
+          {{ form.csrf_token }}
+
+          <fieldset class="checkpoint">
+            {{ form.checkpoint.label }}
+            {{ form.checkpoint }}
+            {% if form.checkpoint.errors %}
+              <ul class="errors">
+                {% for error in form.checkpoint.errors %}
+                  <li>{{ error }}</li>{% endfor %}
+              </ul>
+            {% endif %}
+          </fieldset>
+
+          <fieldset class="sigma">
+            {{ form.sigma.label }}
+            {{ form.sigma(min="0.6", max="0.99", step="0.001", oninput="outputUpdate(value)") }}
+            <output for="sigma" id="selected-sigma"></output>
+            {% if form.sigma.errors %}
+              <ul class="errors">
+                {% for error in form.sigma.errors %}
+                  <li>{{ error }}</li>{% endfor %}
+              </ul>
+            {% endif %}
+          </fieldset>
+
+          <fieldset class="text">
+            {{ form.text.label }}
+            {{ form.text }}
+            {% if form.text.errors %}
+              <ul class="errors">
+                {% for error in form.text.errors %}
+                  <li>{{ error }}</li>{% endfor %}
+              </ul>
+            {% endif %}
+          </fieldset>
+
+          <div class="submit-button">
+            {{ form.submit }}
+          </div>
+
+        </form>
+      </div>
+  {% endif %}
+
+{% endblock %}
+
+{% block additionalscripts %}
+<script>
+function outputUpdate(sigma) {
+    document.querySelector('#selected-sigma').style.display = 'block';
+    document.querySelector('#selected-sigma').value = sigma;
+}
+</script>
+{% endblock %}

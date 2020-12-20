@@ -1,0 +1,65 @@
+{% extends "layout.jinja2" %}
+
+{% block pagestyles %}
+  <link href="{{ url_for('static', filename='dist/css/dashboard.css') }}" rel="stylesheet" type="text/css">
+  <link href="{{ url_for('static', filename='dist/css/settings.css') }}" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="https://use.typekit.net/sus7rlu.css">
+{% endblock %}
+
+{% block content %}
+  {% if current_user.is_authenticated %}
+      <div class="table-wrapper">
+
+        <div class="logo">
+          <img src="{{ url_for('static', filename='dist/img/logo.png') }}" alt="logo" width="80" />
+        </div>
+
+        {% for message in get_flashed_messages() %}
+          <div class="alert alert-warning">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{ message }}
+          </div>
+        {% endfor %}
+
+        <h1>Result</h1>
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Tanggal</th>
+              <th>Checkpoint</th>
+              <th>Sigma</th>
+              <th>Text</th>
+              <th>Audio</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for data in result %}
+            <tr>
+              <td>{{data.tanggal}}</td>
+              <td>{{data.checkpoint}}</td>
+              <td>{{data.sigma}}</td>
+              <td>{{data.text}}</td>
+              <td>
+                <audio controls>
+                  <source src="{{ url_for('static', filename=data.file) }}" type="audio/wav">
+                Your browser does not support the audio element.
+                </audio>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+  {% endif %}
+
+{% endblock %}
+
+{% block additionalscripts %}
+<script>
+function outputUpdate(sigma) {
+    document.querySelector('#selected-sigma').style.display = 'block';
+    document.querySelector('#selected-sigma').value = sigma;
+}
+</script>
+{% endblock %}
