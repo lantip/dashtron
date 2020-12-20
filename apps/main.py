@@ -137,7 +137,7 @@ def result(checkpoint, sigma, text):
 
         model = load_model(hparams)
         model.load_state_dict(torch.load(current_app.config['CHECKPOINT_PATH']+checkpoint, map_location=torch.device('cpu'))['state_dict'])
-        waveglow = torch.load(current_app.config['WAVEGLOW_PATH']+'waveglow_gdrive.pt')['model']
+        waveglow = torch.load(current_app.config['WAVEGLOW_PATH']+'waveglow_256channels_universal_v5.pt')['model']
         for k in waveglow.convinv:
             k.float()
 
